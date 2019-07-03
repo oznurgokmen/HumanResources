@@ -1,0 +1,102 @@
+﻿
+@model Personel
+@{
+    ViewBag.Title = "Personel Düzenle";
+}
+
+<div class="container">
+
+    <h2>Yeni Personel</h2>
+
+    @using (Html.BeginForm("Duzenle", "Personeller", FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.DepartmanId)
+            @Html.DropDownListFor(x => x.DepartmanId, null, "Seçiniz",
+                new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.DepartmanId, null,
+                new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.PersonelAd)
+            @Html.TextBoxFor(x => x.PersonelAd, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PersonelAd, null,
+                new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.PersonelSoyad)
+            @Html.TextBoxFor(x => x.PersonelSoyad, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PersonelSoyad, null,
+                new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.PersonelEmail)
+            @Html.TextBoxFor(x => x.PersonelEmail, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PersonelEmail, null,
+                new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.TelefonNo)
+            @Html.TextBoxFor(x => x.TelefonNo, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.TelefonNo, null,
+                new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.IseBaslamaTarihi)
+            @Html.TextBoxFor(x => x.IseBaslamaTarihi, new { @class = "form-control", id = "datepicker" })
+            @Html.ValidationMessageFor(x => x.IseBaslamaTarihi, null,
+                new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Maas)
+            @Html.TextBoxFor(x => x.Maas, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Maas, null,
+                new { @class = "text-danger" })
+        </div>
+
+        string resimAd =
+         string.IsNullOrEmpty(Model.FotoAd) ? "gorselyok.jpg" : Model.FotoAd;
+
+
+        <div class="form-group">
+            @Html.HiddenFor(x => x.FotoAd)
+            <label for="dosya">Personel Resmi</label> <br />
+            <img src="~/img/@resimAd" height="100" class="mb-2" /> <br />
+            <input type="file" class="form-control-file" name="dosya" id="dosya" />
+            @Html.ValidationMessageFor(x => x.FotoAd, null,
+                new { @class = "text-danger" })
+        </div>
+
+
+        <button type="submit" class="btn btn-primary mb-2">Kaydet</button>
+    }
+</div>
+
+
+@section scripts {
+    <script>
+    $(function () {
+    $("#datepicker").datepicker();
+
+    $("#datepicker").datepicker("option", "dateFormat", "dd.mm.yy");
+    $("#datepicker").datepicker("option",
+    $.datepicker.regional["tr"]);
+    });
+    </script>
+
+}
+
+
+
+
+

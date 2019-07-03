@@ -1,0 +1,99 @@
+﻿
+@model List<Personel>
+@{
+    ViewBag.Title = "Personeller";
+}
+
+<div class="container">
+
+    <h2>Personeller</h2>
+
+    <div class="islemButonlari">
+        @Html.ActionLink("Yeni Personel", "Ekle", "Personeller", null,
+            new { @class = "btn btn-primary" })
+    </div>
+
+    @if (Request.QueryString["sonuc"] == "silindi")
+    {
+        <div class="alert alert-info">
+            Seçtiğiniz personel(ler) başarıyla silindi.
+        </div>
+    }
+
+
+    <table class="table" id="tblPersoneller">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Departman Id</th>
+                <th>Personel Adı</th>
+                <th>Personel Soyadı</th>
+                <th>E-Mail Adresi</th>
+                <th>Telefon</th>
+                <th>İşe Başlama Tarihi</th>
+                <th>Maaş</th>
+                <th>Personel Fotoğraf</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Personel personel in Model)
+            {
+                <tr>
+                    <td>@personel.Id</td>
+
+                    <td>@personel.DepartmanId</td>
+                    <td>@personel.PersonelAd</td>
+                    <td>@personel.PersonelSoyad</td>
+                    <td>@personel.PersonelEmail</td>
+                    <td>@personel.TelefonNo</td>
+                    <td>@personel.IseBaslamaTarihi</td>
+                    <td>@personel.Maas</td>
+                    <td>
+                        <img src="~/img/@(
+                            string.IsNullOrEmpty(personel.FotoAd)
+                            ? "gorselyok.jpg"
+                            : personel.FotoAd)"
+                             width="100" height="100" />
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Duzenle", "Personeller", new { Id = personel.Id })" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <form action="@Url.Action("Sil", "Personeller")" method="post" class="SilForm">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="Id" value="@personel.Id" />
+
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@section styles {
+    <link href="~/Areas/Admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Areas/Admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Areas/Admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $("#tblPersoneller").DataTable();
+
+        $("form.SilForm").submit(function () {
+            return confirm("Silmek istediğinize emin misiniz?");
+        });
+    </script>
+
+}
+
+

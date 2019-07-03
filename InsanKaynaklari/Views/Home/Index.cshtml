@@ -1,0 +1,139 @@
+﻿
+@model HomeIndexVM
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    ViewBag.Title = "Anasayfa";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+<section class="jumbotron mt-3">
+    <div class="container text-center">
+        <h2 class="jumbotron-heading">İ.K. Hizmetleri</h2>
+        <p class="lead text-muted mb-0"> Birey Kendi Önemini Kavradığı Ölçüde Değerli İşler Başarır Ve Topluma Fayda Sağlar</p>
+    </div>
+</section>
+
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        @Html.ActionLink("Anasayfa", "Index", "Home")
+                    </li>
+
+                    @if (!string.IsNullOrEmpty(Model.SeciliDepartmanAd))
+                    {
+                        <li class="breadcrumb-item">
+                            @Html.ActionLink(Model.SeciliDepartmanAd, "Index", "Home", new { cid = Model.SeciliDepartmanId }, null)
+                        </li>
+                    }
+
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+
+    <div class="row">
+        @*SOL ÇUBUK BAŞLANGIÇ*@
+        <div class="col-md-2">
+            <div class="card bg-light mb-2">
+                <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-list"></i> Departmanlar</div>
+                <ul class="list-group category_block">
+                    <li class="list-group-item @(-1 == Model.SeciliDepartmanId ? "selected" : "")">
+                        <a href="@Url.Action("Index", "Home")">
+                            Tümü
+                        </a>
+                    </li>
+
+                    @foreach (Departman departman in Model.Departmanlar)
+                    {
+                        <li class="list-group-item @(departman.Id == Model.SeciliDepartmanId ? "selected" : "")">
+                            <a href="@Url.Action("Index", "Home", new { cid = departman.Id })">
+                                @departman.DepartmanAd
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        @*İKİNCİ SÜTÜN BAŞLANGIÇ*@
+        <div class="col md-9">
+
+            <div class="row">
+                <form action="@Url.Action("Index", "Home")" method="get">
+
+                    <input type="hidden" name="cid" value="@Model.SeciliDepartmanId" />
+
+                </form>
+            </div>
+
+            <div class="row">
+
+                <div class="table-responsive">
+
+                    <table id="tblPersoneller" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Personel Fotoğraf</th>
+                                <th>Personel Adı</th>
+                                <th>Personel Soyadı</th>
+                                <th>E-Mail Adresi</th>
+                                <th>Telefon</th>
+                                <th>İşe Başlama Tarihi</th>
+                                <th>Maaş</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Personel personel in Model.Personeller)
+                            {
+                            <tr>
+                                <td>@personel.Id</td>
+                                <td>
+                                    <img src="~/img/@(
+                            string.IsNullOrEmpty(personel.FotoAd)
+                            ? "gorselyok.jpg"
+                            : personel.FotoAd)"
+                                         width="100" height="100" />
+                                </td>
+                                <td>@personel.PersonelAd</td>
+                                <td>@personel.PersonelSoyad</td>
+                                <td>@personel.PersonelEmail</td>
+                                <td>@personel.TelefonNo</td>
+                                <td>@personel.IseBaslamaTarihi</td>
+                                <td>@personel.Maas</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section styles {
+
+    <link href="~/Areas/Admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
+
+@section scripts {
+
+    <script src="~/Areas/Admin/vendor/datatables/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="~/Areas/Admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+
+    <script>
+        $("#tblPersoneller").DataTable();
+    </script>
+
+}
